@@ -12,6 +12,8 @@ A backend Web API for managing classes, teachers, students, and enrollments — 
 - **Auto-seeded Admin Account** — a default admin user is seeded on first run for easy setup
 - **Input Validation** — request validation via FluentValidation, with consistent error responses
 - **Swagger / OpenAPI** — interactive API docs with built-in JWT bearer auth support
+<img width="2720" height="2880" alt="class_assignment_system_architecture" src="https://github.com/user-attachments/assets/b179c823-0d89-4fed-8bae-f45a3e994004" />
+
 
 ## Tech Stack
 
