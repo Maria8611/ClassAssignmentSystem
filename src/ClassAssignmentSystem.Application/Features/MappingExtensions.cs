@@ -16,4 +16,7 @@ public static class MappingExtensions
     public static EnrollmentRequestDto ToDto(this EnrollmentRequest er, string courseTitle, string studentName) => new(
         er.Id, er.CourseId, courseTitle, er.StudentId, studentName,
         er.Status.ToString(), er.RejectionReason, er.CreatedAt, er.ActedAt);
+    public static AssignmentDto ToDto(this Assignment assignment) => new(
+        assignment.Id,assignment.Title, assignment.Description,assignment.Deadline, assignment.CourseId, assignment.MaxMarks, 
+        assignment.CreatedByTeacherId, assignment.CreatedAt, assignment.Course.Title, assignment.Deadline > DateTime.UtcNow());
 }
