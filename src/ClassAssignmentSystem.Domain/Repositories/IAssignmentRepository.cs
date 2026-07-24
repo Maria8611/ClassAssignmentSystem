@@ -12,6 +12,7 @@ namespace ClassAssignmentSystem.Domain.Repositories
         Task<IReadOnlyList<Assignment>> GetByTeacherIdAsync(Guid teacherId, CancellationToken ct = default);
         Task AddAsync(Assignment assignment, CancellationToken ct = default);
         Task SaveChangesAsync(CancellationToken ct = default);
+
     }
 
    

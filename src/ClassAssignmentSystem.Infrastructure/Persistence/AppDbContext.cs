@@ -35,10 +35,8 @@ public class AppDbContext : DbContext
 
     // DbSets will be added here as aggregate roots are implemented, e.g.:
     public DbSet<Course> Courses { get; set; } = null!;
-    //public DbSet<Assignment> Assignments { get; set; } = null!;
-    //public DbSet<Submission> Submissions { get; set; } = null!;
-    //public DbSet<Student> Students { get; set; } = null!;
-    //public DbSet<Teacher> Teachers { get; set; } = null!;
+    public DbSet<Assignment> Assignments { get; set; } = null!;
+    public DbSet<Submission> Submissions { get; set; } = null!;
     public DbSet<User> Users => Set<User>();
 
     public DbSet<EnrollmentRequest> EnrollmentRequests => Set<EnrollmentRequest>();
@@ -95,6 +93,39 @@ public class AppDbContext : DbContext
              .HasForeignKey(er => er.StudentId)
              .OnDelete(DeleteBehavior.Cascade);
             e.HasIndex(er => new { er.StudentId, er.CourseId, er.Status });
+        });
+
+        modelBuilder.Entity<Assignment>(e =>
+        {
+            e.HasKey(a => a.Id);
+            e.Property(a => a.Title).IsRequired().HasMaxLength(200);
+            e.Property(a => a.Description).IsRequired().HasMaxLength(1000);
+            e.Property(a => a.Deadline).IsRequired();
+            e.Property(a => a.MaxMarks).IsRequired();
+            e.HasOne(a => a.Course)
+             .WithMany(c => c.Assignments)
+             .HasForeignKey(a => a.CourseId)
+             .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<Submission>(e =>
+        {
+            e.HasKey(s => s.Id);
+            e.Property(s => s.SubmittedAt).IsRequired();
+            e.Property(s => s.FileName).IsRequired().HasMaxLength(255);
+            e.Property(s => s.StoredFileName).IsRequired().HasMaxLength(255);
+            e.Property(s => s.ContentType).IsRequired().HasMaxLength(100);
+            e.Property(s => s.FileSizeBytes).IsRequired();
+            e.Property(s => s.Feedback).HasMaxLength(1000); // Nullable string in C#, nullable in DB
+            e.Property(s=> s.Status).HasConversion<string>().HasMaxLength(20).IsRequired();
+            e.HasOne(s => s.Assignment)
+             .WithMany(a => a.Submissions)
+             .HasForeignKey(s => s.AssignmentId)
+             .OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(s => s.Student)
+             .WithMany(u => u.Submissions)
+             .HasForeignKey(s => s.StudentId)
+             .OnDelete(DeleteBehavior.Restrict); // Prevent deleting a student if they have submissions
         });
     }
 

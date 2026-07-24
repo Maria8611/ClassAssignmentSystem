@@ -30,7 +30,7 @@ namespace ClassAssignmentSystem.Domain.Entities
         // Grading
         public GradeStatus GradeStatus { get; private set; }
         public int? MarksObtained { get; private set; }
-        public string? TeacherComment { get; private set; }
+        public string? Feedback { get; private set; }
         public Guid? GradedByTeacherId { get; private set; }
         public DateTime? GradedAt { get; private set; }
 
@@ -111,7 +111,7 @@ namespace ClassAssignmentSystem.Domain.Entities
             if (marksObtained > maxMarks) throw new DomainException($"Marks cannot exceed max marks ({maxMarks}).");
 
             MarksObtained = marksObtained;
-            TeacherComment = comment?.Trim();
+            Feedback = comment?.Trim();
             GradeStatus = GradeStatus.Graded;
             GradedByTeacherId = teacherId;
             GradedAt = DateTime.UtcNow;
@@ -123,7 +123,7 @@ namespace ClassAssignmentSystem.Domain.Entities
         {
             EnsureSubmitted();
             if (string.IsNullOrWhiteSpace(comment)) throw new DomainException("Comment cannot be empty.");
-            TeacherComment = comment.Trim();
+            Feedback = comment.Trim();
             GradedByTeacherId = teacherId;
             LastModifiedAt = DateTime.UtcNow;
         }

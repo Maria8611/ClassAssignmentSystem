@@ -14,6 +14,7 @@ public class User : BaseEntity
     // Navigation
     public ICollection<Course> TaughtCourses { get; private set; } = new List<Course>();
     public ICollection<EnrollmentRequest> EnrollmentRequests { get; private set; } = new List<EnrollmentRequest>();
+    public ICollection<Submission> Submissions { get; private set; } = new List<Submission>();
 
     private User() { } // EF Core
 

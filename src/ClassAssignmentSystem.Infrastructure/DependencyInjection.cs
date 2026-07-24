@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ClassAssignmentSystem.Application.Common.Interfaces;
+using ClassAssignmentSystem.Infrastructure.Persistence.Repositories;
 
 namespace ClassAssignmentSystem.Infrastructure;
 
@@ -46,8 +47,8 @@ public static class DependencyInjection
 
         // ── Repositories ──────────────────────────────────────────────────
         // Registered as each aggregate's repository is implemented, e.g.:
-        // services.AddScoped<ICourseRepository, CourseRepository>();
-        // services.AddScoped<IAssignmentRepository, AssignmentRepository>();
+         //services.AddScoped<ICourseRepository, CourseRepository>();
+         //services.AddScoped<IAssignmentRepository, AssignmentRepository>();
         // services.AddScoped<ISubmissionRepository, SubmissionRepository>();
 
         return services;

@@ -1,12 +1,10 @@
-﻿using ClassAssignmentSystem.Application.Common.Interfaces;
-using ClassAssignmentSystem.Application.Common.Results;
+﻿using ClassAssignmentSystem.Application.Common.Results;
 using ClassAssignmentSystem.Application.DTOs;
 using ClassAssignmentSystem.Domain.Entities;
 using ClassAssignmentSystem.Domain.Exceptions;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using ClassAssignmentSystem.Application.Features;
+using ClassAssignmentSystem.Domain.Repositories;
 
 namespace ClassAssignmentSystem.Application.Features.Assignments.Commands.CreateAssignment
 {
