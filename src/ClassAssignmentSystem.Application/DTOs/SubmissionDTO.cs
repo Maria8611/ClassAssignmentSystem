@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using ClassAssignmentSystem.Domain.Entities;
+using ClassAssignmentSystem.Domain.Enums;
+
 
 namespace ClassAssignmentSystem.Application.DTOs
 {
@@ -10,19 +10,17 @@ namespace ClassAssignmentSystem.Application.DTOs
        string AssignmentTitle,
        Guid StudentId,
        string StudentName,
-       string Status,           // Draft | Submitted
+       SubmissionStatus Status,           // Draft | Submitted
        string FileName,
        string ContentType,
        long FileSizeBytes,
        DateTime LastModifiedAt,
        DateTime? SubmittedAt,
-       // Grading fields
-       string GradeStatus,      // Pending | Graded
+       GradeStatus GradeStatus,      
        int? MarksObtained,
        int MaxMarks,
-       double? Percentage,
-       string? TeacherComment,
-       DateTime? GradedAt);
+       DateTime? GradedAt,
+      string? Feedback);
 
     public record GradeSubmissionDto(int MarksObtained, string? Comment);
 

@@ -30,6 +30,7 @@ namespace ClassAssignmentSystem.Domain.Entities
         // Grading
         public GradeStatus GradeStatus { get; private set; }
         public int? MarksObtained { get; private set; }
+        public int MaxMarks { get; set; }
         public string? Feedback { get; private set; }
         public Guid? GradedByTeacherId { get; private set; }
         public DateTime? GradedAt { get; private set; }
@@ -156,5 +157,10 @@ namespace ClassAssignmentSystem.Domain.Entities
 
         public static bool IsAllowedExtension(string extension) => AllowedExtensions.Contains(extension);
         public static IReadOnlyCollection<string> GetAllowedExtensions() => AllowedExtensions;
+
+        public void ReplaceFile(string safeFileName, string blobName, string contentType, long fileSizeBytes, bool isLate)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

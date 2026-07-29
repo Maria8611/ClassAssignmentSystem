@@ -4,6 +4,8 @@ public interface IEnrollmentRequestRepository
 {
     Task<EnrollmentRequest?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<EnrollmentRequest?> GetPendingByStudentAndCourseAsync(Guid studentId, Guid courseId, CancellationToken cancellationToken = default);
+    Task<EnrollmentRequest?> GetApprovedByStudentAndCourseAsync(Guid studentId, Guid courseId, CancellationToken cancellationToken = default);
+
     Task<IReadOnlyList<EnrollmentRequest>> GetByCourseIdAsync(Guid courseId, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<EnrollmentRequest>> GetByStudentIdAsync(Guid studentId, CancellationToken cancellationToken = default);
     Task<int> GetApprovedCountByCourseAsync(Guid courseId, CancellationToken cancellationToken = default);

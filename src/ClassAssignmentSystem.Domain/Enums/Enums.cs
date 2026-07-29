@@ -23,6 +23,7 @@ public enum SubmissionStatus
 {
     Draft = 1,       // student saved but not yet confirmed
     Submitted = 2,   // confirmed — locked forever
+    Graded = 3
 }
 
 public enum GradeStatus

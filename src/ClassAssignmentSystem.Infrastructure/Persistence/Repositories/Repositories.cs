@@ -33,6 +33,10 @@ public class EnrollmentRequestRepository : IEnrollmentRequestRepository
     public Task<EnrollmentRequest?> GetPendingByStudentAndCourseAsync(Guid studentId, Guid courseId, CancellationToken ct = default)
         => _db.EnrollmentRequests.FirstOrDefaultAsync(er =>
             er.StudentId == studentId && er.CourseId == courseId && er.Status == EnrollmentStatus.Pending, ct);
+    public Task<EnrollmentRequest?> GetApprovedByStudentAndCourseAsync(Guid studentId, Guid courseId, CancellationToken ct = default)
+         => _db.EnrollmentRequests.FirstOrDefaultAsync(er =>
+             er.StudentId == studentId && er.CourseId == courseId && er.Status == EnrollmentStatus.Approved, ct);
+
     public async Task<IReadOnlyList<EnrollmentRequest>> GetByCourseIdAsync(Guid courseId, CancellationToken ct = default)
         => await _db.EnrollmentRequests.Where(er => er.CourseId == courseId)
                     .OrderByDescending(er => er.CreatedAt).ToListAsync(ct);

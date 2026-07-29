@@ -20,5 +20,9 @@ public static class MappingExtensions
         assignment.Id, assignment.Title, assignment.Description, assignment.Deadline,
          assignment.MaxMarks, assignment.CourseId, courseTitle,
         assignment.CreatedByTeacherId, teacherName, assignment.IsDeadlinePassed(), assignment.CreatedAt);
+    public static SubmissionDto ToDto(this Submission s) => new(
+        s.Id,s.AssignmentId,
+        s.Assignment.Title,s.StudentId, s.Student.FullName, s.Status, s.FileName, s.ContentType, s.FileSizeBytes,
+        s.LastModifiedAt, s.SubmittedAt, s.GradeStatus, s.MarksObtained, s.MaxMarks, s.GradedAt, s.Feedback);
 }
 
