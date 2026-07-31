@@ -12,6 +12,7 @@ public class Course : BaseEntity
 
     public Guid? TeacherId { get; private set; }
     public User? Teacher { get; private set; }
+    public ICollection<Assignment> Assignments { get; private set; } = new List<Assignment>();
 
     public ICollection<EnrollmentRequest> EnrollmentRequests { get; private set; } = new List<EnrollmentRequest>();
 

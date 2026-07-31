@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ClassAssignmentSystem.Application.Common.Interfaces;
+using ClassAssignmentSystem.Application.Configurations;
+using ClassAssignmentSystem.Infrastructure.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ClassAssignmentSystem.Application.Common.Interfaces;
 
 namespace ClassAssignmentSystem.Infrastructure;
 
@@ -26,6 +28,8 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        services.Configure<BlobStorageOptions>(configuration.GetSection(BlobStorageOptions.SectionName));
+        services.AddScoped<IBlobStorageService, AzureBlobStorageService>();
         // ── EF Core + SQL Server ──────────────────────────────────────────
         services.AddDbContext<Persistence.AppDbContext>(options =>
             options.UseSqlServer(
@@ -46,10 +50,16 @@ public static class DependencyInjection
 
         // ── Repositories ──────────────────────────────────────────────────
         // Registered as each aggregate's repository is implemented, e.g.:
-        // services.AddScoped<ICourseRepository, CourseRepository>();
-        // services.AddScoped<IAssignmentRepository, AssignmentRepository>();
+         //services.AddScoped<ICourseRepository, CourseRepository>();
+         //services.AddScoped<IAssignmentRepository, AssignmentRepository>();
         // services.AddScoped<ISubmissionRepository, SubmissionRepository>();
 
         return services;
     }
 }
+
+
+//
+// Then scaffold + apply the migration:
+//   dotnet ef migrations add AddSubmissions -p Infrastructure -s WebApi
+//   dotnet ef database update -p Infrastructure -s WebApi

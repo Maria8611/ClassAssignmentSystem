@@ -1,4 +1,5 @@
 using ClassAssignmentSystem.API.Middleware;
+using ClassAssignmentSystem.Application.Common.Interfaces;
 using ClassAssignmentSystem.Application.Features.Auth;
 using ClassAssignmentSystem.Application.Interfaces;
 using ClassAssignmentSystem.Application.Validators;
@@ -6,12 +7,12 @@ using ClassAssignmentSystem.Domain.Repositories;
 using ClassAssignmentSystem.Infrastructure.Persistence;
 using ClassAssignmentSystem.Infrastructure.Persistence.Repositories;
 using ClassAssignmentSystem.Infrastructure.Security;
+using ClassAssignmentSystem.Infrastructure.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
-using System.Reflection.Metadata;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +25,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<IEnrollmentRequestRepository, EnrollmentRequestRepository>();
+builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
+builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
+builder.Services.AddScoped<IBlobStorageService, AzureBlobStorageService>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 // Application Services
 builder.Services.AddScoped<IAuthService, AuthService>();
