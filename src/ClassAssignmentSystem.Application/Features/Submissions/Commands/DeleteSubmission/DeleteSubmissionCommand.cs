@@ -47,7 +47,7 @@ public class DeleteSubmissionCommandHandler : IRequestHandler<DeleteSubmissionCo
 
         await _blobStorageService.DeleteAsync(_options.SubmissionsContainer, submission.StoredFileName, cancellationToken);
 
-        await _submissionRepository.DeleteAsync(submission);
+        _submissionRepository.Delete(submission);
         await _submissionRepository.SaveChangesAsync(cancellationToken);
     }
 }
