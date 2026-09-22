@@ -5,6 +5,7 @@ using ClassAssignmentSystem.Domain.Exceptions;
 using MediatR;
 using ClassAssignmentSystem.Application.Features;
 using ClassAssignmentSystem.Domain.Repositories;
+using ClassAssignmentSystem.Application.Configurations;
 
 namespace ClassAssignmentSystem.Application.Features.Assignments.Commands.CreateAssignment
 {

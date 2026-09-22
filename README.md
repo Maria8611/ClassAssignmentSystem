@@ -39,7 +39,8 @@ ClassAssignmentSystem/
 │   ├── ClassAssignmentSystem.Infrastructure/  # EF Core, repositories, external services
 │   └── ClassAssignmentSystem.Api/             # Controllers, Program.cs, DI wiring
 └── tests/
-    └── ClassAssignmentSystem.Tests/           # Unit / integration tests
+    ├── ClassAssignmentSystem.UnitTests/       # Domain + Application unit tests
+    └── ClassAssignmentSystem.IntegrationTests/ # API integration tests
 ```
 
 ## Getting Started
@@ -115,12 +116,14 @@ Password: (see seed configuration in Infrastructure layer)
 dotnet test
 ```
 
+Tests run automatically on push and pull request via GitHub Actions (`.github/workflows/test.yml`).
+
 ## Roadmap
 
 - [ ] Redis caching for class listings
 - [ ] Event-driven notifications via RabbitMQ / MassTransit
 - [ ] Dockerized deployment
-- [ ] CI/CD pipeline via GitHub Actions
+- [x] CI/CD pipeline via GitHub Actions
 
 ## License
 

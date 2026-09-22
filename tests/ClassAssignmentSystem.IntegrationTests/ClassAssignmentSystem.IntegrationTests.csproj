@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ClassAssignmentSystem.API\ClassAssignmentSystem.API.csproj" />
+    <ProjectReference Include="..\..\src\ClassAssignmentSystem.Domain\ClassAssignmentSystem.Domain.csproj" />
   </ItemGroup>
 
 </Project>
