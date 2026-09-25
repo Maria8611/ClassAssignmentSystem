@@ -10,7 +10,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      Jwt__Secret: ${{ secrets.JWT_SECRET }}
+      Jwt__Secret: ${{ secrets.JWT_SECRET || 'ZXBvpW47yEV5p+8hAduLkuLEaxy0E1XKwzgtOX5NzBwNcSdnQNk71f3BTdR7oXdM' }}
     steps:
       - uses: actions/checkout@v4
 
