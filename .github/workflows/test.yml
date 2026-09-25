@@ -1,0 +1,26 @@
+name: Tests
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      Jwt__Secret: ${{ secrets.JWT_SECRET || 'ZXBvpW47yEV5p+8hAduLkuLEaxy0E1XKwzgtOX5NzBwNcSdnQNk71f3BTdR7oXdM' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore
+        run: dotnet restore ClassAssignmentSystem.slnx
+
+      - name: Test
+        run: dotnet test ClassAssignmentSystem.slnx --configuration Release --no-restore --collect:"XPlat Code Coverage" --settings coverlet.runsettings
