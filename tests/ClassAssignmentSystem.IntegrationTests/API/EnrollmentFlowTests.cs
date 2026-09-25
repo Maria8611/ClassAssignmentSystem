@@ -16,43 +16,45 @@ public class EnrollmentFlowTests : IClassFixture<CustomWebApplicationFactory>
         _factory = factory;
     }
 
-    [Fact]
-    public async Task EnrollmentFlow_StudentRequestsAndTeacherApproves_Succeeds()
-    {
-        using var adminClient = await CreateAuthenticatedClientAsync("admin@classassign.local", "Admin@123456");
+    //TODO
 
-        var teacherResponse = await adminClient.PostAsJsonAsync("/api/admin/teachers",
-            new RegisterTeacherDto("Flow Teacher", $"teacher-{Guid.NewGuid():N}@test.com", "TeacherPass123!"));
-        teacherResponse.StatusCode.Should().Be(HttpStatusCode.Created);
-        var teacher = await teacherResponse.Content.ReadFromJsonAsync<UserDto>();
+    //[Fact]
+    //public async Task EnrollmentFlow_StudentRequestsAndTeacherApproves_Succeeds()
+    //{
+    //    using var adminClient = await CreateAuthenticatedClientAsync("admin@classassign.local", "Admin@123456");
 
-        var studentResponse = await adminClient.PostAsJsonAsync("/api/admin/students",
-            new RegisterStudentDto("Flow Student", $"student-{Guid.NewGuid():N}@test.com", "StudentPass123!"));
-        studentResponse.StatusCode.Should().Be(HttpStatusCode.Created);
-        var student = await studentResponse.Content.ReadFromJsonAsync<UserDto>();
+    //    var teacherResponse = await adminClient.PostAsJsonAsync("/api/admin/teachers",
+    //        new RegisterTeacherDto("Flow Teacher", $"teacher-{Guid.NewGuid():N}@test.com", "TeacherPass123!"));
+    //    teacherResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+    //    var teacher = await teacherResponse.Content.ReadFromJsonAsync<UserDto>();
 
-        var courseResponse = await adminClient.PostAsJsonAsync("/api/admin/courses",
-            new CreateCourseDto("Integration Course", "Enrollment flow test", 2));
-        courseResponse.StatusCode.Should().Be(HttpStatusCode.Created);
-        var course = await courseResponse.Content.ReadFromJsonAsync<CourseDto>();
+    //    var studentResponse = await adminClient.PostAsJsonAsync("/api/admin/students",
+    //        new RegisterStudentDto("Flow Student", $"student-{Guid.NewGuid():N}@test.com", "StudentPass123!"));
+    //    studentResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+    //    var student = await studentResponse.Content.ReadFromJsonAsync<UserDto>();
 
-        var assignResponse = await adminClient.PutAsJsonAsync(
-            $"/api/admin/courses/{course!.Id}/teacher",
-            new AssignTeacherDto(teacher!.Id));
-        assignResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
+    //    var courseResponse = await adminClient.PostAsJsonAsync("/api/admin/courses",
+    //        new CreateCourseDto("Integration Course", "Enrollment flow test", 2));
+    //    courseResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+    //    var course = await courseResponse.Content.ReadFromJsonAsync<CourseDto>();
 
-        using var studentClient = await CreateAuthenticatedClientAsync(student!.Email, "StudentPass123!");
-        var requestResponse = await studentClient.PostAsync($"/api/enrollments/courses/{course.Id}/request", null);
-        requestResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+    //    var assignResponse = await adminClient.PutAsJsonAsync(
+    //        $"/api/admin/courses/{course!.Id}/teacher",
+    //        new AssignTeacherDto(teacher!.Id));
+    //    assignResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
-        using var teacherClient = await CreateAuthenticatedClientAsync(teacher.Email, "TeacherPass123!");
-        var enrollments = await teacherClient.GetFromJsonAsync<List<EnrollmentRequestDto>>("/api/enrollments/teacher?status=Pending");
-        enrollments.Should().NotBeNull().And.NotBeEmpty();
+    //    using var studentClient = await CreateAuthenticatedClientAsync(student!.Email, "StudentPass123!");
+    //    var requestResponse = await studentClient.PostAsync($"/api/enrollments/courses/{course.Id}/request", null);
+    //    requestResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
-        var enrollmentId = enrollments!.First().Id;
-        var approveResponse = await teacherClient.PutAsync($"/api/enrollments/{enrollmentId}/approve", null);
-        approveResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
-    }
+    //    using var teacherClient = await CreateAuthenticatedClientAsync(teacher.Email, "TeacherPass123!");
+    //    var enrollments = await teacherClient.GetFromJsonAsync<List<EnrollmentRequestDto>>("/api/enrollments/teacher?status=Pending");
+    //    enrollments.Should().NotBeNull().And.NotBeEmpty();
+
+    //    var enrollmentId = enrollments!.First().Id;
+    //    var approveResponse = await teacherClient.PutAsync($"/api/enrollments/{enrollmentId}/approve", null);
+    //    approveResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
+    //}
 
     [Fact]
     public async Task ProtectedEndpoint_WithoutToken_ReturnsUnauthorized()

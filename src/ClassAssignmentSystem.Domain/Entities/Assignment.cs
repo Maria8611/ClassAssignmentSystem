@@ -61,8 +61,8 @@ namespace ClassAssignmentSystem.Domain.Entities
             string title, string description, DateTime deadline, int maxMarks,
             Guid courseId, Guid teacherId)
         {
-            if (string.IsNullOrEmpty(title.Trim())) throw new ArgumentException("Title is required.");
-            if (string.IsNullOrEmpty(description.Trim())) throw new ArgumentException("Description is required.");
+            if (string.IsNullOrEmpty(title?.Trim())) throw new ArgumentException("Title is required.");
+            if (string.IsNullOrEmpty(description?.Trim())) throw new ArgumentException("Description is required.");
             if (deadline <= DateTime.UtcNow) throw new DomainException("Deadline must be in the future.");
             if (maxMarks <= 0) throw new DomainException("Max marks must be greater than zero.");
            

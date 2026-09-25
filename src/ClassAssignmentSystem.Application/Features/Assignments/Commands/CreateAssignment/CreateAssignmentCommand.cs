@@ -6,20 +6,22 @@ using MediatR;
 using ClassAssignmentSystem.Application.Features;
 using ClassAssignmentSystem.Domain.Repositories;
 using ClassAssignmentSystem.Application.Configurations;
+using ClassAssignmentSystem.Application.Interfaces;
 
 namespace ClassAssignmentSystem.Application.Features.Assignments.Commands.CreateAssignment
 {
     // ─── Create Assignment (Teacher) ──────────────────────────────────────────────
 
-    public record CreateAssignmentCommand(Guid TeacherId, CreateAssignmentDto Dto) : IRequest<Result<AssignmentDto>>;
+    public record CreateAssignmentCommand( CreateAssignmentDto Dto) : IRequest<Result<AssignmentDto>>;
 
     public class CreateAssignmentHandler : IRequestHandler<CreateAssignmentCommand, Result<AssignmentDto>>
     {
         private readonly IAssignmentRepository _assignments;
         private readonly ICourseRepository _courses;
+        private readonly ICurrentUserService _currentUser;
 
-        public CreateAssignmentHandler(IAssignmentRepository assignments, ICourseRepository courses)
-        { _assignments = assignments; _courses = courses; }
+        public CreateAssignmentHandler(IAssignmentRepository assignments, ICourseRepository courses, ICurrentUserService currentUser)
+        { _assignments = assignments; _courses = courses; _currentUser = currentUser; }
 
         public async Task<Result<AssignmentDto>> Handle(CreateAssignmentCommand request, CancellationToken ct)
         {
@@ -27,13 +29,13 @@ namespace ClassAssignmentSystem.Application.Features.Assignments.Commands.Create
                 ?? throw new NotFoundException(nameof(Course), request.Dto.CourseId);
 
             // Teacher ownership check
-            if (course.TeacherId != request.TeacherId)
+            if (course.TeacherId != _currentUser.UserId)
                 return Result<AssignmentDto>.Failure(Error.Forbidden("Forbidden Access", "You can only create assignments for courses assigned to you."));
 
             var assignment = Assignment.Create(
                 request.Dto.Title, request.Dto.Description,
                 request.Dto.Deadline, request.Dto.MaxMarks,
-                request.Dto.CourseId, request.TeacherId);
+                request.Dto.CourseId, _currentUser.UserId.Value);
 
             await _assignments.AddAsync(assignment, ct);
             await _assignments.SaveChangesAsync(ct);
