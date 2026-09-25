@@ -9,7 +9,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-
+    env:
+      Jwt__Secret: ${{ secrets.JWT_SECRET }}
     steps:
       - uses: actions/checkout@v4
 
