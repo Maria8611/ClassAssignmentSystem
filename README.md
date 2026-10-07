@@ -120,7 +120,7 @@ Tests run automatically on push and pull request via GitHub Actions (`.github/wo
 
 ## Roadmap
 
-- [ ] Redis caching for class listings
+- [x] Redis caching for class listings
 - [ ] Event-driven notifications via RabbitMQ / MassTransit
 - [ ] Dockerized deployment
 - [x] CI/CD pipeline via GitHub Actions
