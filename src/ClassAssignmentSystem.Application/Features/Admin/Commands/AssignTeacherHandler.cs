@@ -1,4 +1,5 @@
 ﻿using ClassAssignmentSystem.Application.Common.Results;
+using ClassAssignmentSystem.Application.Configurations;
 using ClassAssignmentSystem.Domain.Entities;
 using ClassAssignmentSystem.Domain.Exceptions;
 using ClassAssignmentSystem.Domain.Repositories;

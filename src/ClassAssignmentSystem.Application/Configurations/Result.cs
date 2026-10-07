@@ -1,4 +1,6 @@
-﻿namespace ClassAssignmentSystem.Application.Common.Results;
+﻿using ClassAssignmentSystem.Application.Common.Results;
+
+namespace ClassAssignmentSystem.Application.Configurations;
 
 /// <summary>
 /// Non-generic Result — for operations that succeed or fail with no return value.

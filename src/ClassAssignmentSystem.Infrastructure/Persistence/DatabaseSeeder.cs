@@ -17,7 +17,10 @@ public class DatabaseSeeder
 
     public async Task SeedAsync(CancellationToken ct = default)
     {
-        await _db.Database.MigrateAsync(ct);
+        if (_db.Database.ProviderName?.Contains("InMemory", StringComparison.OrdinalIgnoreCase) == true)
+            await _db.Database.EnsureCreatedAsync(ct);
+        else
+            await _db.Database.MigrateAsync(ct);
         if (await _db.Users.AnyAsync(u => u.Role == UserRole.Admin, ct))
         {
             _logger.LogInformation("Admin already exists. Skipping seed.");

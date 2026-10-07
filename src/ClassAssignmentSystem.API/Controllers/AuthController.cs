@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using ClassAssignmentSystem.Application.Common.Results;
+using ClassAssignmentSystem.Application.Configurations;
 using ClassAssignmentSystem.Application.DTOs;
 using ClassAssignmentSystem.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;

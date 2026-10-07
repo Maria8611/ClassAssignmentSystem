@@ -18,16 +18,16 @@ namespace ClassAssignmentSystem.API.Controllers
 
         /// <summary>Create a new assignment</summary>
         [Authorize(Roles = "Teacher")]
-        [HttpPost("Assignment/{TeacherId:guid}")]
-        public async Task<IActionResult> CreateAssignment(Guid TeacherId, CreateAssignmentDto Dto, CancellationToken ct)
+        [HttpPost("Assignment")]
+        public async Task<IActionResult> CreateAssignment( CreateAssignmentDto Dto, CancellationToken ct)
         {
-            var result = await _mediator.Send(new CreateAssignmentCommand(TeacherId, Dto), ct);
+            var result = await _mediator.Send(new CreateAssignmentCommand(Dto), ct);
             if (result.IsFailure) return BadRequest(new { error = result.Error });
             return CreatedAtAction(nameof(GetAssignment), new { id = result.Value!.Id }, result.Value);
         }
 
         /// <summary>Get a specific assignment by ID.</summary>
-        [HttpGet("assignment/{id:guid}")]
+        [HttpGet("Assignment/{id:guid}")]
         public async Task<IActionResult> GetAssignment(Guid id, CancellationToken ct)
         {
             var course = await _mediator.Send(new GetAssignmentByIdQuery(id), ct);

@@ -1,5 +1,5 @@
 ﻿using ClassAssignmentSystem.Application.Common;
-using ClassAssignmentSystem.Application.Common.Results;
+using ClassAssignmentSystem.Application.Configurations;
 using ClassAssignmentSystem.Application.DTOs;
 using ClassAssignmentSystem.Domain.Entities;
 

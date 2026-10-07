@@ -26,7 +26,7 @@ public class SubmissionsController : ControllerBase
     /// Uses multipart/form-data so the file streams straight through to Azure Blob Storage
     /// without ASP.NET buffering the whole body in memory.
     /// </summary>
-    [HttpPost("assignments/{assignmentId:int}")]
+    [HttpPost("assignments/{assignmentId:Guid}")]
     [Authorize(Roles = "Student")]
     [RequestSizeLimit(15_000_000)] // slightly above MaxFileSizeBytes to allow for multipart overhead
     [Consumes("multipart/form-data")]
@@ -50,7 +50,7 @@ public class SubmissionsController : ControllerBase
     }
 
     /// <summary>Returns a short-lived SAS URL the client uses to download the file directly from Azure.</summary>
-    [HttpGet("{submissionId:int}/download-url")]
+    [HttpGet("{submissionId:guid}/download-url")]
     public async Task<ActionResult<SubmissionDownloadUrlDto>> GetDownloadUrl(Guid submissionId, CancellationToken cancellationToken)
     {
         var result = await _sender.Send(new GetSubmissionDownloadUrlQuery { SubmissionId = submissionId }, cancellationToken);
@@ -58,7 +58,7 @@ public class SubmissionsController : ControllerBase
     }
 
     /// <summary>Teacher/Admin: list all student submissions for an assignment.</summary>
-    [HttpGet("assignments/{assignmentId:int}")]
+    [HttpGet("assignments/{assignmentId:guid}")]
     [Authorize(Roles = "Teacher,Admin")]
     public async Task<ActionResult<List<SubmissionDto>>> GetForAssignment(Guid assignmentId, CancellationToken cancellationToken)
     {
@@ -67,7 +67,7 @@ public class SubmissionsController : ControllerBase
     }
 
     /// <summary>Student deletes their own ungraded submission.</summary>
-    [HttpDelete("{submissionId:int}")]
+    [HttpDelete("{submissionId:guid}")]
     [Authorize(Roles = "Student")]
     public async Task<IActionResult> Delete(Guid submissionId, CancellationToken cancellationToken)
     {

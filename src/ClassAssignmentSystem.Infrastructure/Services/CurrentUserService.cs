@@ -21,7 +21,7 @@ namespace ClassAssignmentSystem.Infrastructure.Services
         public string? Username => _httpContextAccessor.HttpContext?.User?
             .FindFirst(ClaimTypes.Name)?.Value;
 
-        Guid? ICurrentUserService.UserId => throw new NotImplementedException();
+        Guid? ICurrentUserService.UserId => Guid.TryParse(UserId, out var guid) ? guid : null;
 
         // Checks if the user has a specific role claim
         public bool IsInRole(string role) => _httpContextAccessor.HttpContext?.User?

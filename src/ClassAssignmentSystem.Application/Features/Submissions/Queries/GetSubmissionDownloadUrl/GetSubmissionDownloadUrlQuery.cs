@@ -29,24 +29,36 @@ public class GetSubmissionDownloadUrlQueryHandler : IRequestHandler<GetSubmissio
         ICurrentUserService currentUserService,
         IOptions<BlobStorageOptions> options)
     {
-        _submissionRepository = _submissionRepository;
+        _submissionRepository = submissionRepository;
         _blobStorageService = blobStorageService;
         _currentUserService = currentUserService;
         _options = options.Value;
+        
     }
 
     public async Task<SubmissionDownloadUrlDto> Handle(GetSubmissionDownloadUrlQuery request, CancellationToken cancellationToken)
     {
+        var user = _currentUserService?.UserId;
+
+        if (user is null)
+            throw new ForbiddenException("An authenticated user is required.");
+
         var submission = await _submissionRepository.GetByIdAsync(request.SubmissionId, cancellationToken) ?? throw new NotFoundException(nameof(Submission), request.SubmissionId);
 
         // A student may only download their own work; teachers/admins are authorized
         // at the controller level via [Authorize(Roles = "Teacher,Admin")] on the teacher route,
         // so this check specifically covers the student-facing route.
-        var isOwner = submission.StudentId == _currentUserService.UserId;
+        
+
+        var isOwner = submission.StudentId == _currentUserService?.UserId;
         var isPrivileged = _currentUserService.IsInRole("Teacher") || _currentUserService.IsInRole("Admin");
 
         if (!isOwner && !isPrivileged)
             throw new ForbiddenException("You do not have access to this submission.");
+        
+        if (string.IsNullOrWhiteSpace(submission.StoredFileName))
+            throw new NotFoundException(nameof(Submission),"The submission has no stored file.");
+
 
         var expiry = TimeSpan.FromMinutes(_options.SasTokenExpiryMinutes);
         var url = await _blobStorageService.GetReadSasUriAsync(

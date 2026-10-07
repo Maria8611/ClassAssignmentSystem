@@ -1,4 +1,5 @@
 using ClassAssignmentSystem.Application.Common.Results;
+using ClassAssignmentSystem.Application.Configurations;
 using ClassAssignmentSystem.Application.DTOs;
 using ClassAssignmentSystem.Application.Features;
 using ClassAssignmentSystem.Domain.Entities;

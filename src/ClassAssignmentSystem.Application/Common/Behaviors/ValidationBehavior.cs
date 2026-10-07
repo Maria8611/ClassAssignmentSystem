@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 using ClassAssignmentSystem.Application.Common.Results;
+using ClassAssignmentSystem.Application.Configurations;
 
 namespace ClassAssignmentSystem.Application.Common.Behaviors;
 
@@ -31,7 +32,7 @@ namespace ClassAssignmentSystem.Application.Common.Behaviors;
 public sealed class ValidationBehavior<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
-    where TResponse : Result<TResponse>
+    where TResponse : Result
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
 
@@ -74,24 +75,26 @@ public sealed class ValidationBehavior<TRequest, TResponse>
         // We need to return TResponse (which is a Result subtype) carrying the error.
         // TResponse is constrained to Result, so we create it via reflection.
         // This is the standard approach for generic Result + MediatR pipeline behaviors.
-        return CreateValidationResult<TResponse>(error);
+        return CreateValidationResult(error);
     }
 
-    private static TResponse CreateValidationResult<TResult>(Error error)
-        where TResult : Result<TResult>
+    private static TResponse CreateValidationResult(Error error)
     {
-        // If TResult is non-generic Result, call Result.Failure(error)
-        if (typeof(TResult) == typeof(Result))
+        if (typeof(TResponse) == typeof(Result))
             return (TResponse)(object)Result.Failure(error);
 
-        // If TResult is Result<T>, call Result<T>.Failure(error) via reflection
-        // This is necessary because we don't know T at compile time in the behavior.
-        var genericType = typeof(TResult).GetGenericArguments()[0];
-        var resultType = typeof(Result<>).MakeGenericType(genericType);
-        var failureMethod = resultType.GetMethod(
-            nameof(Result<object>.Failure),
-            [typeof(Error)])!;
+        if (typeof(TResponse).IsGenericType &&
+            typeof(TResponse).GetGenericTypeDefinition() == typeof(Result<>))
+        {
+            var genericType = typeof(TResponse).GetGenericArguments()[0];
+            var resultType = typeof(Result<>).MakeGenericType(genericType);
+            var failureMethod = resultType.GetMethod(
+                nameof(Result<object>.Failure),
+                [typeof(Error)])!;
 
-        return (TResponse)failureMethod.Invoke(null, [error])!;
+            return (TResponse)failureMethod.Invoke(null, [error])!;
+        }
+
+        throw new InvalidOperationException($"Unsupported response type: {typeof(TResponse).Name}");
     }
 }
