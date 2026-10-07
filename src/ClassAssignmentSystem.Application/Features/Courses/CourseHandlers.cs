@@ -4,6 +4,7 @@ using ClassAssignmentSystem.Application.DTOs;
 using ClassAssignmentSystem.Domain.Entities;
 using ClassAssignmentSystem.Domain.Exceptions;
 using MediatR;
+using Microsoft.Extensions.Caching.Hybrid;
 
 namespace ClassAssignmentSystem.Application.Features.Courses;
 
@@ -12,18 +13,32 @@ public class GetAllCoursesHandler : IRequestHandler<GetAllCoursesQuery, IReadOnl
 {
     private readonly ICourseRepository _courses;
     private readonly IEnrollmentRequestRepository _enrollments;
-    public GetAllCoursesHandler(ICourseRepository courses, IEnrollmentRequestRepository enrollments)
-    { _courses = courses; _enrollments = enrollments; }
+    private readonly HybridCache _hybridCache;
+
+    public GetAllCoursesHandler(ICourseRepository courses, IEnrollmentRequestRepository enrollments, HybridCache hybridCache)
+    { _courses = courses; _enrollments = enrollments; _hybridCache = hybridCache; }
     public async Task<IReadOnlyList<CourseDto>> Handle(GetAllCoursesQuery request, CancellationToken ct)
     {
-        var courses = await _courses.GetAllAsync(ct);
-        var result = new List<CourseDto>();
-        foreach (var c in courses)
-        {
-            var count = await _enrollments.GetApprovedCountByCourseAsync(c.Id, ct);
-            result.Add(c.ToDto(count));
-        }
-        return result;
+        string cacheKey = "courses:all-with-counts";
+        List<CourseDto> cachedResult = await _hybridCache.GetOrCreateAsync(
+         cacheKey,
+         async token =>
+         {
+             var courses = await _courses.GetAllAsync(token);
+             var result = new List<CourseDto>();
+
+             foreach (var c in courses)
+             {
+                 token.ThrowIfCancellationRequested();
+                 var count = await _enrollments.GetApprovedCountByCourseAsync(c.Id, token);
+                 result.Add(c.ToDto(count));
+             }
+             return result;
+         },
+        cancellationToken: ct 
+    );
+
+        return cachedResult;
     }
 }
 
