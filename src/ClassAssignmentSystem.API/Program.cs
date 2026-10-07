@@ -10,6 +10,7 @@ using ClassAssignmentSystem.Infrastructure.Security;
 using ClassAssignmentSystem.Infrastructure.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
@@ -96,6 +97,28 @@ builder.Services.AddSwaggerGen(c =>
         [new OpenApiSecuritySchemeReference(schemeId, document)] = new List<string>()
     });
 });
+var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
+
+// 2. Register Redis Distributed Cache
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = redisConnectionString;
+    options.InstanceName = "ClassAssignmentSystemApi_"; // Optional prefix for your keys
+});
+
+#pragma warning disable EXTEXP0018 
+builder.Services.AddHybridCache(options =>
+{
+    options.MaximumPayloadBytes = 1024 * 1024 * 10; // 10MB
+    options.MaximumKeyLength = 512;
+    // Configure default expiration times globally
+    options.DefaultEntryOptions = new HybridCacheEntryOptions
+    {
+        Expiration = TimeSpan.FromMinutes(10), // Total lifespan (L2 Redis)
+        LocalCacheExpiration = TimeSpan.FromMinutes(2) // Lifespan inside local app memory (L1)
+    };
+});
+#pragma warning restore EXTEXP0018
 
 var app = builder.Build();
 
